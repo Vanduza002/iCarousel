@@ -1368,6 +1368,27 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
     }
 }
 
+- (CGPoint)wheelCenter {
+    iCarousel * carousel = self;
+    CGFloat spacing = [carousel valueForOption:iCarouselOptionSpacing withDefault:1.0];
+    CGFloat arc = [carousel valueForOption:iCarouselOptionArc withDefault:(CGFloat)M_PI * 2.0];
+    CGFloat defaultRadius = carousel.itemWidth * spacing * carousel.numberOfItems / arc;
+    CGFloat radius = [carousel valueForOption:iCarouselOptionRadius withDefault:defaultRadius];
+
+    if (carousel.type == iCarouselTypeInvertedWheel) {
+        radius = -radius;
+    }
+
+    CGPoint base = CGPointMake(CGRectGetMidX(carousel.bounds) - carousel.viewpointOffset.width,
+                               CGRectGetMidY(carousel.bounds) - carousel.viewpointOffset.height);
+
+    if (carousel.vertical) {
+        return CGPointMake(base.x - radius, base.y);
+    } else {
+        return CGPointMake(base.x, base.y + radius);
+    }
+}
+
 
 #pragma mark -
 #pragma mark Scrolling
